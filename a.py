@@ -41,7 +41,7 @@ def parse_formula(formula):
         comp[element] += count
     return dict(comp)
 
-st.title("Calculadora Química")
+st.title("Calculadora Química Grupo 2")
 
 menu = st.sidebar.selectbox("Selecciona una operación:", [
     "Calcular Moles",
