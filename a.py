@@ -2,6 +2,8 @@ import streamlit as st
 from collections import defaultdict
 import re
 
+st.set_page_config(page_title="Calculadora Química", layout="wide")
+
 AVOGADRO = 6.022e23
 
 MASAS_ATOMICAS = {
@@ -41,36 +43,37 @@ def parse_formula(formula):
         comp[element] += count
     return dict(comp)
 
+# Título e instrucciones
 st.title("🧪 Mol-Calculator - Grupo 2")
 
 st.markdown("""
-## 📘 Instrucciones para usar esta calculadora
+### 📘 Instrucciones
 
-Esta herramienta fue creada para ser **muy fácil de usar**, incluso si **no tienes conocimientos de química**.  
-Solo debes seguir estos pasos:
+Esta calculadora fue diseñada para que cualquier persona pueda usarla fácilmente, incluso si no sabe química.  
+Solo sigue estos pasos:
 
-1. En el menú de la izquierda, elige lo que deseas calcular.
+1. Elige el tipo de cálculo que quieres hacer en el menú de abajo.
 2. Escribe los datos que te pide (como una fórmula química o una masa).
-3. Presiona el botón **Calcular** para ver el resultado.
+3. Presiona el botón **Calcular** para obtener el resultado.
 
 Puedes calcular:
-- La cantidad de **moles** (relación entre masa y masa molar).
-- El número de **moléculas o átomos** con el **número de Avogadro**.
-- La **masa molar** de cualquier sustancia.
-- La **composición porcentual** (cuánto hay de cada elemento).
-- La **fórmula empírica** (forma más simple de una sustancia).
-
-¡Explora y aprende de forma simple! 🧪
+- 🧮 Moles (con masa y masa molar)
+- 🧪 Número de moléculas o átomos (con el número de Avogadro)
+- ⚖️ Masa molar de un compuesto
+- 📊 Composición porcentual
+- 🧬 Fórmulas empíricas y moleculares
 """)
 
-menu = st.sidebar.radio("🧮 Elige el tipo de cálculo que deseas realizar:", [
+# Menú principal fijo
+menu = st.radio("👇 Elige el cálculo que deseas realizar:", [
     "Calcular Moles",
     "Número de Avogadro",
     "Masa Molar",
     "Composición Porcentual",
     "Fórmula Empírica y Molecular"
-])
+], horizontal=True)
 
+# Opciones del menú
 if menu == "Calcular Moles":
     st.header("🧮 Calcular Moles")
     masa = st.number_input("Masa en gramos (g):", min_value=0.0, format="%.6f")
@@ -78,31 +81,28 @@ if menu == "Calcular Moles":
     if st.button("Calcular"):
         if masa_molar > 0:
             moles = masa / masa_molar
-            st.success(f"Moles = {moles:.4f} mol")
+            st.success(f"Resultado: **{moles:.4f} mol**")
         else:
             st.error("La masa molar debe ser mayor que cero.")
 
 elif menu == "Número de Avogadro":
     st.header("🔬 Número de Avogadro")
-
-    tipo = st.radio("¿Qué deseas calcular?", ["Átomos / moléculas simples", "Moléculas de una fórmula química"])
-    
-    if tipo == "Átomos / moléculas simples":
+    opcion = st.radio("¿Qué deseas calcular?", ["Átomos / moléculas simples", "Moléculas de una fórmula química"])
+    if opcion == "Átomos / moléculas simples":
         moles = st.number_input("Cantidad en moles:", min_value=0.0, format="%.6f")
         if st.button("Calcular"):
             resultado = moles * AVOGADRO
-            st.success(f"Cantidad de partículas: {resultado:.3e}")
-    
+            st.success(f"Cantidad de partículas: **{resultado:.3e}**")
     else:
-        formula = st.text_input("Fórmula química (ejemplo: H2O, CO2):")
+        formula = st.text_input("Fórmula química (ej: H2O, CO2):")
         moles = st.number_input("Cantidad de moles del compuesto:", min_value=0.0, format="%.6f")
         if st.button("Calcular"):
             try:
-                parse_formula(formula)  # solo para validar fórmula
+                parse_formula(formula)  # valida fórmula
                 resultado = moles * AVOGADRO
-                st.success(f"Número de moléculas de {formula}: {resultado:.3e}")
+                st.success(f"Número de moléculas de {formula}: **{resultado:.3e}**")
             except Exception as e:
-                st.error(f"Fórmula no válida: {e}")
+                st.error(f"Error en la fórmula: {e}")
 
 elif menu == "Masa Molar":
     st.header("⚖️ Masa Molar")
@@ -111,7 +111,7 @@ elif menu == "Masa Molar":
         try:
             comp = parse_formula(formula)
             masa = sum(MASAS_ATOMICAS[el] * n for el, n in comp.items())
-            st.success(f"Masa Molar de {formula} = {masa:.3f} g/mol")
+            st.success(f"Masa Molar de {formula} = **{masa:.3f} g/mol**")
         except Exception as e:
             st.error(str(e))
 
@@ -132,7 +132,7 @@ elif menu == "Composición Porcentual":
             st.error(str(e))
 
 elif menu == "Fórmula Empírica y Molecular":
-    st.header("🧪 Fórmula Empírica y Molecular")
+    st.header("🧬 Fórmula Empírica y Molecular")
     n = st.number_input("¿Cuántos elementos hay?", min_value=1, step=1)
     masas = {}
     if n:
@@ -149,14 +149,14 @@ elif menu == "Fórmula Empírica y Molecular":
                     min_val = min(masas.values())
                     proporciones = {el: round(val / min_val) for el, val in masas.items()}
                     formula_empirica = ''.join([f"{el}{int(cant) if cant > 1 else ''}" for el, cant in proporciones.items()])
-                    st.success(f"Fórmula empírica: {formula_empirica}")
+                    st.success(f"Fórmula empírica: **{formula_empirica}**")
 
                     masa_empirica = sum(MASAS_ATOMICAS[el] * cant for el, cant in proporciones.items())
                     masa_molecular = st.number_input("Introduce la masa molecular experimental:", min_value=0.0, format="%.6f")
                     if masa_molecular > 0:
                         factor = round(masa_molecular / masa_empirica)
                         formula_molecular = ''.join([f"{el}{int(cant * factor) if cant * factor > 1 else ''}" for el, cant in proporciones.items()])
-                        st.success(f"Fórmula molecular: {formula_molecular}")
+                        st.success(f"Fórmula molecular: **{formula_molecular}**")
                     else:
                         st.info("Introduce una masa molecular experimental válida para calcular fórmula molecular.")
             except Exception as e:
