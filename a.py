@@ -41,7 +41,7 @@ def parse_formula(formula):
         comp[element] += count
     return dict(comp)
 
-st.title("🧪 Calculadora Química - Grupo 2")
+st.title("🧪 Mol-Calculator - Grupo 2")
 
 st.markdown("""
 ## 📘 Instrucciones para usar esta calculadora
@@ -60,7 +60,7 @@ Puedes calcular:
 - La **composición porcentual** (cuánto hay de cada elemento).
 - La **fórmula empírica** (forma más simple de una sustancia).
 
-¡Explora y aprende de forma simple! 😊
+¡Explora y aprende de forma simple! 🧪
 """)
 
 menu = st.sidebar.selectbox("🧮 Elegir cálculo:", [
