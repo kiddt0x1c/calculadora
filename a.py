@@ -64,6 +64,8 @@ Puedes calcular:
 - 🧬 Fórmulas empíricas y moleculares
 """)
 
+
+
 # Menú principal fijo
 menu = st.radio("👇 Elige el cálculo que deseas realizar:", [
     "Calcular Moles",
@@ -72,6 +74,9 @@ menu = st.radio("👇 Elige el cálculo que deseas realizar:", [
     "Composición Porcentual",
     "Fórmula Empírica y Molecular"
 ], horizontal=True)
+
+
+
 
 # Opciones del menú
 if menu == "Calcular Moles":
