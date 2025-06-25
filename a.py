@@ -109,23 +109,6 @@ elif menu == "Número de Avogadro":
             except Exception as e:
                 st.error(f"Error en la fórmula: {e}")
                 
-    if opcion == "partículas de un compuesto":
-        formula = st.text_input("Fórmula del compuesto (ej: H2O):")
-        moles = st.number_input("Introduce los moles:", min_value=0.0, format="%.6f")
-        if st.button("Calcular"):
-            try:
-                comp = parse_formula(formula)
-                total_atomos = sum(comp.values())
-                total_particulas = moles * AVOGADRO * total_atomos
-                st.success(f"Total de partículas en {moles:.3f} mol de {formula}: {total_particulas:.3e}")
-            except Exception as e:
-                st.error(str(e))
-                 else:
-        moles = st.number_input("Introduce los moles:", min_value=0.0, format="%.6f")
-        if st.button("Calcular"):
-            cantidad = moles * AVOGADRO
-            st.success(f"{opcion.capitalize()} = {cantidad:.3e}")
-
 elif menu == "Masa Molar":
     st.header("⚖️ Masa Molar")
     formula = st.text_input("Fórmula química (ej: H2O):")
