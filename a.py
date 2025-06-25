@@ -63,7 +63,7 @@ Puedes calcular:
 ¡Explora y aprende de forma simple! 🧪
 """)
 
-menu = st.sidebar.selectbox("🧮 Elegir cálculo:", [
+menu = st.sidebar.radio("🧮 Elige el tipo de cálculo que deseas realizar:", [
     "Calcular Moles",
     "Número de Avogadro",
     "Masa Molar",
