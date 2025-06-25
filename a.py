@@ -43,23 +43,27 @@ def parse_formula(formula):
 
 st.title("🧪 Calculadora Química - Grupo 2")
 
-with st.expander("ℹ️ Instrucciones de uso"):
-    st.markdown("""
-    Esta aplicación te permite realizar cálculos químicos básicos. Sigue estos pasos:
-    
-    1. Usa el menú de la izquierda para elegir el tipo de cálculo.
-    2. Ingresa los datos solicitados como masa, fórmula química o cantidad de moles.
-    3. Presiona el botón **Calcular** para obtener el resultado.
-    
-    **Opciones disponibles:**
-    - Calcular moles a partir de masa.
-    - Calcular número de partículas (átomos, moléculas) usando el número de Avogadro.
-    - Calcular la masa molar de un compuesto.
-    - Obtener la composición porcentual de una fórmula.
-    - Determinar la fórmula empírica y molecular.
-    """)
+st.markdown("""
+## 📘 Instrucciones para usar esta calculadora
 
-menu = st.sidebar.selectbox("📘 Selecciona una operación:", [
+Esta herramienta fue creada para ser **muy fácil de usar**, incluso si **no tienes conocimientos de química**.  
+Solo debes seguir estos pasos:
+
+1. En el menú de la izquierda, elige lo que deseas calcular.
+2. Escribe los datos que te pide (como una fórmula química o una masa).
+3. Presiona el botón **Calcular** para ver el resultado.
+
+Puedes calcular:
+- La cantidad de **moles** (relación entre masa y masa molar).
+- El número de **moléculas o átomos** con el **número de Avogadro**.
+- La **masa molar** de cualquier sustancia.
+- La **composición porcentual** (cuánto hay de cada elemento).
+- La **fórmula empírica** (forma más simple de una sustancia).
+
+¡Explora y aprende de forma simple! 😊
+""")
+
+menu = st.sidebar.selectbox("🧮 Elegir cálculo:", [
     "Calcular Moles",
     "Número de Avogadro",
     "Masa Molar",
@@ -80,24 +84,25 @@ if menu == "Calcular Moles":
 
 elif menu == "Número de Avogadro":
     st.header("🔬 Número de Avogadro")
-    opcion = st.selectbox("¿Qué deseas calcular?", ["átomos", "moléculas", "partículas de un compuesto"])
+
+    tipo = st.radio("¿Qué deseas calcular?", ["Átomos / moléculas simples", "Moléculas de una fórmula química"])
     
-    if opcion == "partículas de un compuesto":
-        formula = st.text_input("Fórmula del compuesto (ej: H2O):")
-        moles = st.number_input("Introduce los moles:", min_value=0.0, format="%.6f")
+    if tipo == "Átomos / moléculas simples":
+        moles = st.number_input("Cantidad en moles:", min_value=0.0, format="%.6f")
+        if st.button("Calcular"):
+            resultado = moles * AVOGADRO
+            st.success(f"Cantidad de partículas: {resultado:.3e}")
+    
+    else:
+        formula = st.text_input("Fórmula química (ejemplo: H2O, CO2):")
+        moles = st.number_input("Cantidad de moles del compuesto:", min_value=0.0, format="%.6f")
         if st.button("Calcular"):
             try:
-                comp = parse_formula(formula)
-                total_atomos = sum(comp.values())
-                total_particulas = moles * AVOGADRO * total_atomos
-                st.success(f"Total de partículas en {moles:.3f} mol de {formula}: {total_particulas:.3e}")
+                parse_formula(formula)  # solo para validar fórmula
+                resultado = moles * AVOGADRO
+                st.success(f"Número de moléculas de {formula}: {resultado:.3e}")
             except Exception as e:
-                st.error(str(e))
-    else:
-        moles = st.number_input("Introduce los moles:", min_value=0.0, format="%.6f")
-        if st.button("Calcular"):
-            cantidad = moles * AVOGADRO
-            st.success(f"{opcion.capitalize()} = {cantidad:.3e}")
+                st.error(f"Fórmula no válida: {e}")
 
 elif menu == "Masa Molar":
     st.header("⚖️ Masa Molar")
